@@ -1,5 +1,5 @@
 import {useMemo} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, StyleSheet, FlatList} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -7,21 +7,31 @@ import {useNavigation} from '../hooks/useNavigation';
 import Screen from '../component/template/Screen';
 import Button from '../component/Button';
 import SwipeableItem from '../component/SwipeableItem';
+import {deleteTask} from '../redux/task/taskSlice';
 
 const Home = () => {
   const {navigate} = useNavigation();
   const tasks = useSelector((state: any) => state.tasks.tasks);
   const {top} = useSafeAreaInsets();
+  const dispatch = useDispatch();
 
   const containerStyle = useMemo(() => ({paddingTop: top}), [top]);
 
-  const renderItem = ({item, index}: any) => {
+  const handleEdit = (item: object) => {
+    navigate('NewTask', {data: item});
+  };
+
+  const handleDelete = (id: string) => {
+    dispatch(deleteTask({id}));
+  };
+
+  const renderItem = ({item}: any) => {
     return (
       <SwipeableItem
-        key={index}
+        key={item.id}
         item={item}
-        onEdit={() => {}}
-        onDelete={() => {}}
+        onEdit={() => handleEdit(item)}
+        onDelete={() => handleDelete(item.id)}
       />
     );
   };
