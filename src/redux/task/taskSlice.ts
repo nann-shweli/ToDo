@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 type Task = {
+  id: string;
   title: string;
   body: string;
 };
@@ -18,13 +19,20 @@ const taskSlice = createSlice({
   initialState,
   reducers: {
     addTask: (state, action) => {
-      state.tasks.push(action.payload);
+      const id = `${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
+      const newTask = {id, ...action.payload};
+      state.tasks.push(newTask);
     },
-    clearTasks: state => {
-      state.tasks = [];
+    updateTask: (state, action) => {
+      const index = state.tasks.findIndex(
+        task => task.id === action.payload.id,
+      );
+      if (index !== -1) {
+        state.tasks[index] = {...state.tasks[index], ...action.payload};
+      }
     },
   },
 });
 
-export const {addTask, clearTasks} = taskSlice.actions;
+export const {addTask, updateTask} = taskSlice.actions;
 export default taskSlice.reducer;

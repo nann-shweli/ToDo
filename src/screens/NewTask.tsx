@@ -3,24 +3,37 @@ import {TextInput, StyleSheet, View} from 'react-native';
 
 import {useNavigation} from '../hooks/useNavigation';
 import {useDispatch} from 'react-redux';
-import {addTask} from '../redux/task/taskSlice';
+import {addTask, updateTask} from '../redux/task/taskSlice';
 import Screen from '../component/template/Screen';
 import Button from '../component/Button';
 
-const NewTask = () => {
-  const {navigate} = useNavigation();
+const NewTask = ({route}: any) => {
+  const {navigate, goBack} = useNavigation();
   const dispatch = useDispatch();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [height, setHeight] = useState(40);
 
   const bodyInputRef = useRef(null);
+  const taskId = route?.params?.data?.id;
+
+  useEffect(() => {
+    if (route?.params?.data) {
+      setTitle(route.params.data.title || '');
+      setBody(route.params.data.body || '');
+    }
+  }, [route?.params?.data]);
 
   const handleAddTask = () => {
     const newTask = {title, body};
-    dispatch(addTask(newTask));
+    if (taskId) {
+      dispatch(updateTask({id: taskId, ...newTask}));
+    } else {
+      dispatch(addTask(newTask));
+    }
     setTitle('');
     setBody('');
+    goBack();
   };
 
   useEffect(() => {
@@ -33,12 +46,14 @@ const NewTask = () => {
     <Screen>
       <TextInput
         style={[styles.textArea, {height: Math.max(40, height)}]}
-        multiline
+        multiline={false}
         placeholder="Input Title"
         placeholderTextColor="#999"
         textAlignVertical="top"
         value={title}
         onChangeText={setTitle}
+        returnKeyType="next"
+        onSubmitEditing={() => bodyInputRef.current?.focus()}
       />
 
       <TextInput

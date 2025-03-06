@@ -8,10 +8,12 @@ import {
   StyleSheet,
 } from 'react-native';
 import Svg from '../assets/svg';
+import {useNavigation} from '../hooks/useNavigation';
 
 const SwipeableItem = ({item, onEdit, onDelete}: any) => {
   const translateX = useRef(new Animated.Value(0)).current;
   const threshold = -160; // Distance to reveal buttons
+  const {navigate} = useNavigation();
 
   const panResponder = useRef(
     PanResponder.create({
@@ -42,6 +44,10 @@ const SwipeableItem = ({item, onEdit, onDelete}: any) => {
     }),
   ).current;
 
+  const handlePress = (data: any) => {
+    navigate('NewTask', {data: data});
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.actionContainer}>
@@ -62,9 +68,11 @@ const SwipeableItem = ({item, onEdit, onDelete}: any) => {
       <Animated.View
         style={[styles.item, {transform: [{translateX}]}]}
         {...panResponder.panHandlers}>
-        <Text style={styles.text}>
-          {item.title.trim() ? item.title : item.body.split('\n')[0].trim()}
-        </Text>
+        <TouchableOpacity onPress={() => handlePress(item)} activeOpacity={0.7}>
+          <Text style={styles.text}>
+            {item.title.trim() ? item.title : item.body.split('\n')[0].trim()}
+          </Text>
+        </TouchableOpacity>
       </Animated.View>
     </View>
   );
