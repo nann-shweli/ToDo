@@ -6,25 +6,23 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '../hooks/useNavigation';
 import Screen from '../component/template/Screen';
 import Button from '../component/Button';
+import SwipeableItem from '../component/SwipeableItem';
 
 const Home = () => {
   const {navigate} = useNavigation();
   const tasks = useSelector((state: any) => state.tasks.tasks);
   const {top} = useSafeAreaInsets();
 
-  const containerStyle = useMemo(() => {
-    return {
-      paddingTop: top,
-    };
-  }, [top]);
+  const containerStyle = useMemo(() => ({paddingTop: top}), [top]);
 
-  const renderItem = ({item}: any) => {
+  const renderItem = ({item, index}: any) => {
     return (
-      <View key={item.index} style={styles.taskItem}>
-        <Text style={styles.taskTitle}>
-          {item.title.trim() ? item.title : item.body.split('\n')[0].trim()}
-        </Text>
-      </View>
+      <SwipeableItem
+        key={index}
+        item={item}
+        onEdit={() => {}}
+        onDelete={() => {}}
+      />
     );
   };
 
@@ -37,16 +35,20 @@ const Home = () => {
           keyExtractor={(_, index) => index.toString()}
           renderItem={renderItem}
           style={styles.flatlist}
+          ItemSeparatorComponent={ItemSeparatorComponent}
         />
       </View>
-      <Button label="Add New Task" onPress={() => navigate('NewTask')} />
+      <View style={styles.button}>
+        <Button label="Add New Task" onPress={() => navigate('NewTask')} />
+      </View>
     </Screen>
   );
 };
 
+const ItemSeparatorComponent = () => <View style={styles.separator} />;
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     marginBottom: 30,
   },
   header: {
@@ -56,21 +58,15 @@ const styles = StyleSheet.create({
   flatlist: {
     borderRadius: 16,
     paddingHorizontal: 12,
-    backgroundColor: '#F7F7F7',
+    backgroundColor: '#FCFCFC',
     marginTop: 24,
   },
-  taskItem: {
-    paddingVertical: 18,
-    paddingHorizontal: 12,
-    borderBottomWidth: 0.4,
-    borderColor: '#ccc',
-
-    borderRadius: 16,
+  separator: {
+    height: 0.4,
+    backgroundColor: '#ccc',
+    marginHorizontal: 12,
   },
-  taskTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  button: {flex: 1, justifyContent: 'flex-end'},
 });
 
 export default Home;

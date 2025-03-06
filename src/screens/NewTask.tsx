@@ -1,5 +1,5 @@
-import {useState} from 'react';
-import {TextInput, StyleSheet} from 'react-native';
+import {useState, useRef, useEffect} from 'react';
+import {TextInput, StyleSheet, View} from 'react-native';
 
 import {useNavigation} from '../hooks/useNavigation';
 import {useDispatch} from 'react-redux';
@@ -14,6 +14,8 @@ const NewTask = () => {
   const [body, setBody] = useState('');
   const [height, setHeight] = useState(40);
 
+  const bodyInputRef = useRef(null);
+
   const handleAddTask = () => {
     const newTask = {title, body};
     dispatch(addTask(newTask));
@@ -21,12 +23,18 @@ const NewTask = () => {
     setBody('');
   };
 
+  useEffect(() => {
+    if (bodyInputRef?.current) {
+      bodyInputRef.current?.focus();
+    }
+  }, []);
+
   return (
     <Screen>
       <TextInput
         style={[styles.textArea, {height: Math.max(40, height)}]}
         multiline
-        placeholder="Task Title"
+        placeholder="Input Title"
         placeholderTextColor="#999"
         textAlignVertical="top"
         value={title}
@@ -34,9 +42,9 @@ const NewTask = () => {
       />
 
       <TextInput
+        ref={bodyInputRef}
         style={[styles.textArea, {height: Math.max(80, height)}]}
         multiline
-        placeholder="Task Details"
         placeholderTextColor="#999"
         textAlignVertical="top"
         onContentSizeChange={event =>
@@ -44,10 +52,13 @@ const NewTask = () => {
         }
         value={body}
         onChangeText={setBody}
+        autoFocus={true}
       />
 
-      <Button label="Add Task" onPress={handleAddTask} />
-      <Button label="To Home" onPress={() => navigate('Home')} />
+      <View style={styles.buttons}>
+        <Button label="Add Task" onPress={handleAddTask} />
+        <Button label="To Home" onPress={() => navigate('Home')} />
+      </View>
     </Screen>
   );
 };
@@ -63,9 +74,13 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'left',
     marginBottom: 10,
-    borderBottomWidth: 1,
     borderColor: '#ccc',
     padding: 10,
+  },
+  buttons: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    gap: 12,
   },
 });
 
