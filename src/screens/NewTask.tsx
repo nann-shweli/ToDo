@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     textAlign: 'left',
-    backgroundColor: 'red',
   },
   date: {fontSize: 11, marginBottom: 4, color: '#999'},
 });
