@@ -1,4 +1,4 @@
-import {useState, useRef, useEffect} from 'react';
+import {useState, useRef, useEffect, useMemo} from 'react';
 import {TextInput, StyleSheet, View, Keyboard, Text} from 'react-native';
 
 import {useNavigation} from '../hooks/useNavigation';
@@ -33,6 +33,14 @@ const NewTask = ({route}: any) => {
     }
   }, []);
 
+  const createdAt = useMemo(() => {
+    if (route?.params?.data?.createdAt) {
+      return route?.params?.data?.createdAt;
+    } else {
+      return new Date();
+    }
+  }, [route?.params?.data?.createdAt]);
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -46,9 +54,7 @@ const NewTask = ({route}: any) => {
         returnKeyType="next"
         onSubmitEditing={() => bodyInputRef.current?.focus()}
       />
-      <Text style={styles.date}>
-        {format(new Date(), 'dd MMM yyyy h:mm a')}
-      </Text>
+      <Text style={styles.date}>{format(createdAt, 'dd MMM yyyy h:mm a')}</Text>
       <TextInput
         ref={bodyInputRef}
         style={styles.bodyInput}
