@@ -6,6 +6,8 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import StatusBar from '../component/StatusBar';
 import Home from '../screens/Home';
 import NewTask from '../screens/NewTask';
+import Header from './Header';
+import Done from '../screens/Done';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -13,6 +15,13 @@ export type RootStackParamList = {
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
+
+const TaskHeader = (props: any) => (
+  <Header
+    {...props}
+    rightComponent={() => <Done data={props?.route?.params} />}
+  />
+);
 
 const AppNavigation = () => {
   return (
@@ -31,8 +40,8 @@ const AppNavigation = () => {
             name="NewTask"
             component={NewTask}
             options={{
-              title: '',
-              headerBackTitle: 'Lists',
+              title: 'Lists',
+              header: TaskHeader,
             }}
           />
         </Stack.Navigator>

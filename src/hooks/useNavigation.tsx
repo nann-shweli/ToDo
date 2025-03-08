@@ -2,7 +2,7 @@ import {useNavigation as useRNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 export const useNavigation = () => {
-  const {navigate, replace, reset, goBack, pop} =
+  const {navigate, replace, reset, goBack, pop, setParams} =
     useRNavigation<StackNavigationProp<any>>();
 
   return {
@@ -11,5 +11,6 @@ export const useNavigation = () => {
     reset,
     goBack,
     pop,
+    setParams,
   };
 };

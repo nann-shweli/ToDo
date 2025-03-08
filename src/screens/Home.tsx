@@ -1,7 +1,5 @@
-import {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, StyleSheet, FlatList} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {useNavigation} from '../hooks/useNavigation';
 import Screen from '../component/template/Screen';
@@ -12,10 +10,7 @@ import {deleteTask} from '../redux/task/taskSlice';
 const Home = () => {
   const {navigate} = useNavigation();
   const tasks = useSelector((state: any) => state.tasks.tasks);
-  const {top} = useSafeAreaInsets();
   const dispatch = useDispatch();
-
-  const containerStyle = useMemo(() => ({paddingTop: top}), [top]);
 
   const handleEdit = (item: object) => {
     navigate('NewTask', {data: item});
@@ -37,7 +32,7 @@ const Home = () => {
   };
 
   return (
-    <Screen isScroll={false} style={containerStyle}>
+    <Screen isScroll={false}>
       <View style={styles.container}>
         <Text style={styles.header}>Notes</Text>
         <FlatList
