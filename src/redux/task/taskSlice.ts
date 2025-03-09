@@ -21,7 +21,7 @@ const taskSlice = createSlice({
     addTask: (state, action) => {
       const id = `${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
       const newTask = {id, ...action.payload};
-      state.tasks.push(newTask);
+      state.tasks.unshift(newTask);
     },
     updateTask: (state, action) => {
       const index = state.tasks.findIndex(
